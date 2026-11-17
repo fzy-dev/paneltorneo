@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torneo del IES Vigán</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/6/w3.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  </head>
+<body>
+<div class="w3-container w3-amber">
+  <h2>Clasificación</h2>
+</div>
+<table id="csvTable"></table>
+
+
+   
+    <p id="status">Loading CSV...</p>
+
+    <table id="csvTable"></table>
+
+    <script>
+        async function loadCSV() {
+            const table = document.getElementById("csvTable");
+            const status = document.getElementById("status");
+
+            try {
+                const response = await fetch("./data.csv");
+
+                if (!response.ok) {
+                    throw new Error("CSV file not found");
+                }
+
+                const csv = await response.text();
+                const rows = csv.trim().split(/\r?\n/);
+
+                table.innerHTML = "";
+
+                rows.forEach((row, index) => {
+                    const tr = document.createElement("tr");
+
+                    row.split(",").forEach(value => {
+                        const cell = document.createElement(
+                            index === 0 ? "th" : "td"
+                        );
+
+                        cell.textContent = value.trim();
+                        tr.appendChild(cell);
+                    });
+
+                    table.appendChild(tr);
+                });
+
+                status.textContent = "CSV loaded successfully.";
+
+            } catch (error) {
+                status.textContent = "Error: " + error.message;
+            }
+        }
+
+        loadCSV();
+    </script>
+
+</body>
+</html>
+
+
